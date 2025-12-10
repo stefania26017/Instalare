@@ -78,7 +78,6 @@ public class CarsBean {
         );
     }
 
-    // --- METODA NOUĂ PENTRU ȘTERGERE ---
     public void deleteCarsByIds(Collection<Long> carIds) {
         LOG.info("deleteCarsByIds");
 
@@ -96,15 +95,12 @@ public class CarsBean {
         car.setLicensePlate(licensePlate);
         car.setParkingSpot(parkingSpot);
 
-        // 1. Scoatem mașina de la vechiul proprietar
         User oldUser = car.getOwner();
         oldUser.getCars().remove(car);
 
-        // 2. Adăugăm mașina la noul proprietar
         User user = entityManager.find(User.class, userId);
         user.getCars().add(car);
         car.setOwner(user);
 
-        // Nu este nevoie de entityManager.persist/merge explicit, deoarece entitățile sunt managed (JPA detectează modificările automat la finalul tranzacției)
     }
 }
