@@ -37,12 +37,33 @@ public class UsersBean {
     }
 
     private List<UserDto> copyUsersToDto(List<User> users) {
-        List<UserDto> userDtos = new ArrayList<>();
+        List<UserDto> userDtoList = new ArrayList<>();
         for (User user : users) {
-            UserDto dto = new UserDto(user.getId(), user.getUsername(), user.getEmail());
-            userDtos.add(dto);
+            userDtoList.add(new UserDto(user.getId(), user.getUsername(), user.getEmail()));
         }
-        return userDtos;
+        return userDtoList;
+    }
+
+
+    public void createUser(String username, String email, String password, Collection<String> groups) {
+        LOG.info("createUser");
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setPassword(passwordBean.convertToSha256(password));
+        entityManager.persist(newUser);
+
+        assignGroupsToUser(username, groups);
+    }
+
+    private void assignGroupsToUser(String username, Collection<String> groups) {
+        LOG.info("assignGroupsToUser");
+        for (String group : groups) {
+            UserGroup userGroup = new UserGroup();
+            userGroup.setUsername(username);
+            userGroup.setUserGroup(group);
+            entityManager.persist(userGroup);
+        }
     }
 
     public void createUser(String username, String email, String password, Collection<String> groups) {
