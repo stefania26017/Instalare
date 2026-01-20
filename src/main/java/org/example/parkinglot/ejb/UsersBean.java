@@ -44,7 +44,6 @@ public class UsersBean {
         return userDtoList;
     }
 
-
     public void createUser(String username, String email, String password, Collection<String> groups) {
         LOG.info("createUser");
         User newUser = new User();
@@ -53,26 +52,6 @@ public class UsersBean {
         newUser.setPassword(passwordBean.convertToSha256(password));
         entityManager.persist(newUser);
 
-        assignGroupsToUser(username, groups);
-    }
-
-    private void assignGroupsToUser(String username, Collection<String> groups) {
-        LOG.info("assignGroupsToUser");
-        for (String group : groups) {
-            UserGroup userGroup = new UserGroup();
-            userGroup.setUsername(username);
-            userGroup.setUserGroup(group);
-            entityManager.persist(userGroup);
-        }
-    }
-
-    public void createUser(String username, String email, String password, Collection<String> groups) {
-        LOG.info("createUser");
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setEmail(email);
-        newUser.setPassword(passwordBean.convertToSha256(password));
-        entityManager.persist(newUser);
         assignGroupsToUser(username, groups);
     }
 
